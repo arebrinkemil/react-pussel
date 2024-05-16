@@ -5,6 +5,7 @@ import Tile from "./Tile";
 
 interface PuzzleProps {
   tiles: number[];
+  onClick: (index: number) => void;
 }
 
 const GameGrid = styled.div<{ rows: number; columns: number }>`
@@ -16,12 +17,12 @@ const GameGrid = styled.div<{ rows: number; columns: number }>`
   height: 300px;
 `;
 
-const Puzzle: React.FC<PuzzleProps> = ({ tiles }) => {
+const Puzzle: React.FC<PuzzleProps> = ({ tiles, onClick }) => {
   return (
     //skapar en grid med rader och kolumner baserat på config.ts
     <GameGrid rows={GAME_ROWS} columns={GAME_COLS}>
       {tiles.map((tile, index) => (
-        <Tile key={index} number={tile} />
+        <Tile key={index} number={tile} onClick={() => onClick(index)} />
       ))}
     </GameGrid>
   );

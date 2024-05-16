@@ -27,14 +27,32 @@ function App() {
 
   const handleShuffle = () => {
     const initialTiles = tiles.slice();
-    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
+    setTiles(initialTiles.sort(() => Math.random() - 0.5));
+  };
+
+  const handleClick = (index: number) => {
+    console.log("Clicked tile", index);
+    const blankIndex = tiles.indexOf(0); //hittar tom ruta
+
+    const clickedRow = Math.floor(index / GAME_COLS);
+    const clickedColumn = index % GAME_ROWS; //hittar vart klickade rutan är
+
+    const blankRow = Math.floor(blankIndex / GAME_COLS);
+    const blankColumn = blankIndex % GAME_ROWS; //hittar vart den tomma rutan är
+    console.log(clickedRow, clickedColumn, blankRow, blankColumn);
+
+    if (clickedRow === blankRow || clickedColumn === blankColumn) {
+      console.log("Move tile");
+    } else {
+      console.log("Invalid move");
+    }
   };
 
   return (
     <AppContainer>
       <h1>Number Puzzle</h1>
       <p>Order the numbers in order</p>
-      <Puzzle tiles={tiles} />
+      <Puzzle tiles={tiles} onClick={handleClick} />
       <ShuffleButton onShuffle={handleShuffle} />
     </AppContainer>
   );
