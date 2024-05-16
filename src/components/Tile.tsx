@@ -8,7 +8,7 @@ interface TileProps {
 
 const TileContainer = styled.div<{ isBlank: boolean }>`
   display: flex;
-
+  font-size: clamp(1rem, 0.4068rem + 3.1638vw, 8rem);
   align-items: center;
   justify-content: center;
   background-color: ${(props) =>

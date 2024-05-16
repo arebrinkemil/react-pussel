@@ -16,7 +16,7 @@ const GameGrid = styled.div<{ rows: number; columns: number }>`
   grid-template-columns: repeat(${(props) => props.columns}, 1fr);
   gap: 5px;
   width: 100%;
-  max-width: 80vh;
+  max-width: 70vh;
   aspect-ratio: 1/1;
 `;
 

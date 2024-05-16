@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
+
 // import { gameRows, gameCols } from "./config";
 import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
 import PuzzleSizeControlls from "./components/PuzzleSizeControlls";
+import GlobalStyles from "./globalStyles";
 
 const AppContainer = styled.div`
-  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  font-family: "Open Sans", sans-serif;
 `;
 
 function App() {
@@ -99,6 +99,7 @@ function App() {
   }
   return (
     <AppContainer>
+      <GlobalStyles />
       <h1>Number Puzzle</h1>
       <p>Order the numbers in order</p>
       <PuzzleSizeControlls
