@@ -15,6 +15,9 @@ const GameGrid = styled.div<{ rows: number; columns: number }>`
   grid-template-rows: repeat(${(props) => props.rows}, 1fr);
   grid-template-columns: repeat(${(props) => props.columns}, 1fr);
   gap: 5px;
+  width: 100%;
+  max-width: 80vh;
+  aspect-ratio: 1/1;
 `;
 
 const Puzzle: React.FC<PuzzleProps> = ({ tiles, rows, columns, onClick }) => {

@@ -3,8 +3,10 @@ import styled from "@emotion/styled";
 // import { gameRows, gameCols } from "./config";
 import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
+import PuzzleSizeControlls from "./components/PuzzleSizeControlls";
 
 const AppContainer = styled.div`
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,11 +41,10 @@ function App() {
 
     //hittar vart klickade rutan är
     const clickedRow = Math.floor(index / gameCols);
-    const clickedColumn = index % gameRows;
-
+    const clickedColumn = index % gameCols;
     //hittar vart den tomma rutan är
     const blankRow = Math.floor(blankIndex / gameCols);
-    const blankColumn = blankIndex % gameRows;
+    const blankColumn = blankIndex % gameCols;
     console.log(clickedRow, clickedColumn, blankRow, blankColumn);
 
     if (clickedRow === blankRow || clickedColumn === blankColumn) {
@@ -100,22 +101,12 @@ function App() {
     <AppContainer>
       <h1>Number Puzzle</h1>
       <p>Order the numbers in order</p>
-      <label>
-        Rows:
-        <input
-          type="number"
-          value={gameRows}
-          onChange={(e) => setGameRows(Number(e.target.value))}
-        />
-      </label>
-      <label>
-        Columns:
-        <input
-          type="number"
-          value={gameCols}
-          onChange={(e) => setGameCols(Number(e.target.value))}
-        />
-      </label>
+      <PuzzleSizeControlls
+        rows={gameRows}
+        columns={gameCols}
+        onRowsChange={setGameRows}
+        onColumnsChange={setGameCols}
+      />
       <Puzzle
         tiles={tiles}
         rows={gameRows}
@@ -126,5 +117,4 @@ function App() {
     </AppContainer>
   );
 }
-
 export default App;
