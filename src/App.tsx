@@ -6,6 +6,7 @@ import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
 import PuzzleSizeControlls from "./components/PuzzleSizeControlls";
 import GlobalStyles from "./globalStyles";
+import MessageModal from "./components/MessageModal";
 
 const AppContainer = styled.div`
   max-height: 100vh;
@@ -19,6 +20,8 @@ function App() {
   const [tiles, setTiles] = useState<number[]>([]);
   const [gameRows, setGameRows] = useState(3);
   const [gameCols, setGameCols] = useState(3);
+  const [ModalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const setup = () => {
     const totalTiles = gameRows * gameCols - 1;
@@ -81,10 +84,14 @@ function App() {
     copyTilesArray[Index] = 0;
     setTiles(copyTilesArray);
     if (checkWin(copyTilesArray)) {
-      console.log("win");
-    } else {
-      console.log("not win");
+      setModalMessage("Congratulations! You solved the puzzle!");
+      setModalVisible(true);
     }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setup();
   };
 
   //kollar om tilesen har samma index som deras värde
@@ -115,6 +122,11 @@ function App() {
         onClick={handleClick}
       />
       <ShuffleButton onShuffle={handleShuffle} />
+      <MessageModal
+        text={modalMessage}
+        isVisible={ModalVisible}
+        onClose={() => closeModal()}
+      />
     </AppContainer>
   );
 }
