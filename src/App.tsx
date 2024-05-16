@@ -18,7 +18,9 @@ function App() {
 
   useEffect(() => {
     const totalTiles = GAME_ROWS * GAME_COLS - 1;
+    console.log(totalTiles);
     const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1); //skapar en array med tiles med index + 1
+    console.log(initialTiles);
 
     initialTiles.push(0);
 
@@ -34,20 +36,65 @@ function App() {
     console.log("Clicked tile", index);
     const blankIndex = tiles.indexOf(0); //hittar tom ruta
 
+    //hittar vart klickade rutan är
     const clickedRow = Math.floor(index / GAME_COLS);
-    const clickedColumn = index % GAME_ROWS; //hittar vart klickade rutan är
+    const clickedColumn = index % GAME_ROWS;
 
+    //hittar vart den tomma rutan är
     const blankRow = Math.floor(blankIndex / GAME_COLS);
-    const blankColumn = blankIndex % GAME_ROWS; //hittar vart den tomma rutan är
+    const blankColumn = blankIndex % GAME_ROWS;
     console.log(clickedRow, clickedColumn, blankRow, blankColumn);
 
     if (clickedRow === blankRow || clickedColumn === blankColumn) {
       console.log("Move tile");
+      move(index, blankIndex);
     } else {
       console.log("Invalid move");
     }
   };
 
+  const move = (Index: number, blankIndex: number) => {
+    const copyTilesArray = [...tiles];
+    let direction;
+    if (blankIndex < Index) {
+      direction = 1;
+    } else {
+      direction = -1;
+    }
+
+    if (
+      Math.floor(Index / GAME_COLS) === Math.floor(blankIndex / GAME_COLS) //kollar om de är på samma col
+    ) {
+      for (let i = blankIndex; i !== Index; i += direction) {
+        //flyttar tilesen horisontellt
+        copyTilesArray[i] = copyTilesArray[i + direction];
+      }
+    } else {
+      for (let i = blankIndex; i !== Index; i += direction * GAME_COLS) {
+        //flyttar tilesen vertikalt
+        copyTilesArray[i] = copyTilesArray[i + direction * GAME_COLS];
+      }
+    }
+
+    copyTilesArray[Index] = 0;
+    setTiles(copyTilesArray);
+    if (checkWin(copyTilesArray)) {
+      console.log("win");
+    } else {
+      console.log("not win");
+    }
+  };
+
+  //kollar om tilesen har samma index som deras värde
+  function checkWin(tiles: number[]): boolean {
+    return tiles.every((tile, index) => {
+      if (index === tiles.length - 1) {
+        return tile === 0;
+      } else {
+        return tile === index + 1;
+      }
+    });
+  }
   return (
     <AppContainer>
       <h1>Number Puzzle</h1>
