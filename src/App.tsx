@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { GAME_ROWS, GAME_COLS } from "./config";
 import Puzzle from "./components/Puzzle";
+import ShuffleButton from "./components/ShuffleButton";
 
 const AppContainer = styled.div`
   display: flex;
@@ -24,9 +25,17 @@ function App() {
     setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
   }, []);
 
+  const handleShuffle = () => {
+    const initialTiles = tiles.slice();
+    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
+  };
+
   return (
     <AppContainer>
+      <h1>Number Puzzle</h1>
+      <p>Order the numbers in order</p>
       <Puzzle tiles={tiles} />
+      <ShuffleButton onShuffle={handleShuffle} />
     </AppContainer>
   );
 }
