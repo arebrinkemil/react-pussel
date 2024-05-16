@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-import { GAME_ROWS, GAME_COLS } from "./config";
+// import { gameRows, gameCols } from "./config";
 import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
 
@@ -15,21 +15,22 @@ const AppContainer = styled.div`
 
 function App() {
   const [tiles, setTiles] = useState<number[]>([]);
+  const [gameRows, setGameRows] = useState(3);
+  const [gameCols, setGameCols] = useState(3);
+
+  const setup = () => {
+    const totalTiles = gameRows * gameCols - 1;
+    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1);
+    initialTiles.push(0);
+    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
+  };
 
   useEffect(() => {
-    const totalTiles = GAME_ROWS * GAME_COLS - 1;
-    console.log(totalTiles);
-    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1); //skapar en array med tiles med index + 1
-    console.log(initialTiles);
-
-    initialTiles.push(0);
-
-    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
-  }, []);
+    setup();
+  }, [gameRows, gameCols]);
 
   const handleShuffle = () => {
-    const initialTiles = tiles.slice();
-    setTiles(initialTiles.sort(() => Math.random() - 0.5));
+    setup();
   };
 
   const handleClick = (index: number) => {
@@ -37,12 +38,12 @@ function App() {
     const blankIndex = tiles.indexOf(0); //hittar tom ruta
 
     //hittar vart klickade rutan är
-    const clickedRow = Math.floor(index / GAME_COLS);
-    const clickedColumn = index % GAME_ROWS;
+    const clickedRow = Math.floor(index / gameCols);
+    const clickedColumn = index % gameRows;
 
     //hittar vart den tomma rutan är
-    const blankRow = Math.floor(blankIndex / GAME_COLS);
-    const blankColumn = blankIndex % GAME_ROWS;
+    const blankRow = Math.floor(blankIndex / gameCols);
+    const blankColumn = blankIndex % gameRows;
     console.log(clickedRow, clickedColumn, blankRow, blankColumn);
 
     if (clickedRow === blankRow || clickedColumn === blankColumn) {
@@ -63,16 +64,16 @@ function App() {
     }
 
     if (
-      Math.floor(Index / GAME_COLS) === Math.floor(blankIndex / GAME_COLS) //kollar om de är på samma col
+      Math.floor(Index / gameCols) === Math.floor(blankIndex / gameCols) //kollar om de är på samma col
     ) {
       for (let i = blankIndex; i !== Index; i += direction) {
         //flyttar tilesen horisontellt
         copyTilesArray[i] = copyTilesArray[i + direction];
       }
     } else {
-      for (let i = blankIndex; i !== Index; i += direction * GAME_COLS) {
+      for (let i = blankIndex; i !== Index; i += direction * gameCols) {
         //flyttar tilesen vertikalt
-        copyTilesArray[i] = copyTilesArray[i + direction * GAME_COLS];
+        copyTilesArray[i] = copyTilesArray[i + direction * gameCols];
       }
     }
 
@@ -99,7 +100,28 @@ function App() {
     <AppContainer>
       <h1>Number Puzzle</h1>
       <p>Order the numbers in order</p>
-      <Puzzle tiles={tiles} onClick={handleClick} />
+      <label>
+        Rows:
+        <input
+          type="number"
+          value={gameRows}
+          onChange={(e) => setGameRows(Number(e.target.value))}
+        />
+      </label>
+      <label>
+        Columns:
+        <input
+          type="number"
+          value={gameCols}
+          onChange={(e) => setGameCols(Number(e.target.value))}
+        />
+      </label>
+      <Puzzle
+        tiles={tiles}
+        rows={gameRows}
+        columns={gameCols}
+        onClick={handleClick}
+      />
       <ShuffleButton onShuffle={handleShuffle} />
     </AppContainer>
   );
