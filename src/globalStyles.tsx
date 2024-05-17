@@ -47,6 +47,14 @@ const GlobalStyles = () => (
       h1 {
         margin-bottom: 0;
       }
+
+      @media (max-width: 600px) {
+        html,
+        body,
+        #root {
+          overflow-y: auto;
+        }
+      }
     `}
   />
 );
