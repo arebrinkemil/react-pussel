@@ -17,6 +17,13 @@ const AppContainer = styled.div`
   justify-content: center;
 `;
 
+const BottomContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+`;
+
 function App() {
   const [tiles, setTiles] = useState<number[]>([]);
   const [gameRows, setGameRows] = useState(3);
@@ -110,13 +117,15 @@ function App() {
         columns={gameCols}
         onClick={handleClick}
       />
-      <ShuffleButton onShuffle={handleShuffle} />
+      <BottomContainer>
+        <ShuffleButton onShuffle={handleShuffle} />
+        <MovesCounter moves={numberOfMoves} />
+      </BottomContainer>
       <MessageModal
         text={modalMessage}
         isVisible={ModalVisible}
         onClose={() => closeModal()}
       />
-      <MovesCounter moves={numberOfMoves} />
     </AppContainer>
   );
 }

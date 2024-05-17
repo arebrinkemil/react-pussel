@@ -5,16 +5,15 @@ interface CounterProps {
   moves: number;
 }
 
-const Button = styled.button`
-  margin-top: 20px;
+const Counter = styled.div`
   padding: 10px 20px;
 `;
 
 const MovesCounter: React.FC<CounterProps> = ({ moves }) => {
   return (
-    <div>
+    <Counter>
       <h2>Moves: {moves}</h2>
-    </div>
+    </Counter>
   );
 };
 

@@ -6,7 +6,6 @@ interface ShuffleButtonProps {
 }
 
 const Button = styled.button`
-  margin-top: 20px;
   padding: 10px 20px;
 `;
 
