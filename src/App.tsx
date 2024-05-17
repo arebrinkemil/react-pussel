@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
-
 // import { gameRows, gameCols } from "./config";
 import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
 import PuzzleSizeControlls from "./components/PuzzleSizeControlls";
 import GlobalStyles from "./globalStyles";
 import MessageModal from "./components/MessageModal";
+import MovesCounter from "./components/MovesCounter";
+import { checkWin } from "./utils/CheckWin";
 
 const AppContainer = styled.div`
   max-height: 100vh;
@@ -22,13 +23,7 @@ function App() {
   const [gameCols, setGameCols] = useState(3);
   const [ModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-
-  const setup = () => {
-    const totalTiles = gameRows * gameCols - 1;
-    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1);
-    initialTiles.push(0);
-    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
-  };
+  const [numberOfMoves, setNumberOfMoves] = useState(0);
 
   useEffect(() => {
     setup();
@@ -36,6 +31,19 @@ function App() {
 
   const handleShuffle = () => {
     setup();
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setup();
+  };
+
+  const setup = () => {
+    const totalTiles = gameRows * gameCols - 1;
+    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1);
+    initialTiles.push(0);
+    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
+    setNumberOfMoves(0);
   };
 
   const handleClick = (index: number) => {
@@ -51,10 +59,7 @@ function App() {
     console.log(clickedRow, clickedColumn, blankRow, blankColumn);
 
     if (clickedRow === blankRow || clickedColumn === blankColumn) {
-      console.log("Move tile");
       move(index, blankIndex);
-    } else {
-      console.log("Invalid move");
     }
   };
 
@@ -71,39 +76,23 @@ function App() {
       Math.floor(Index / gameCols) === Math.floor(blankIndex / gameCols) //kollar om de är på samma col
     ) {
       for (let i = blankIndex; i !== Index; i += direction) {
-        //flyttar tilesen horisontellt
         copyTilesArray[i] = copyTilesArray[i + direction];
-      }
+      } //flyttar tilesen horisontellt
     } else {
       for (let i = blankIndex; i !== Index; i += direction * gameCols) {
-        //flyttar tilesen vertikalt
         copyTilesArray[i] = copyTilesArray[i + direction * gameCols];
-      }
+      } //flyttar tilesen vertikalt
     }
 
     copyTilesArray[Index] = 0;
     setTiles(copyTilesArray);
+    setNumberOfMoves(numberOfMoves + 1);
     if (checkWin(copyTilesArray)) {
       setModalMessage("Congratulations! You solved the puzzle!");
       setModalVisible(true);
     }
   };
 
-  const closeModal = () => {
-    setModalVisible(false);
-    setup();
-  };
-
-  //kollar om tilesen har samma index som deras värde
-  function checkWin(tiles: number[]): boolean {
-    return tiles.every((tile, index) => {
-      if (index === tiles.length - 1) {
-        return tile === 0;
-      } else {
-        return tile === index + 1;
-      }
-    });
-  }
   return (
     <AppContainer>
       <GlobalStyles />
@@ -127,6 +116,7 @@ function App() {
         isVisible={ModalVisible}
         onClose={() => closeModal()}
       />
+      <MovesCounter moves={numberOfMoves} />
     </AppContainer>
   );
 }

@@ -18,6 +18,7 @@ const GameGrid = styled.div<{ rows: number; columns: number }>`
   width: 100%;
   max-width: 70vh;
   aspect-ratio: 1/1;
+  border: 1px solid black;
 `;
 
 const Puzzle: React.FC<PuzzleProps> = ({ tiles, rows, columns, onClick }) => {
