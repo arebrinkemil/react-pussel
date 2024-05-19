@@ -15,6 +15,6 @@ För att köra spelet, följ dessa steg:
 Starta Spelet
 Efter att installationen är klar, starta spelet med:
 
-    ```bash
-     npm run start
+```bash
+   npm run start
 
