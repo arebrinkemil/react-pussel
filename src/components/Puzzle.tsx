@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "@emotion/styled";
-// import { GAME_ROWS, GAME_COLS } from "../config";
 import Tile from "./Tile";
 
 interface PuzzleProps {
