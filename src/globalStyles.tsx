@@ -55,6 +55,15 @@ const GlobalStyles = () => (
           overflow-y: auto;
         }
       }
+
+      @media (max-height: 600px) {
+        html,
+        body,
+        #root {
+          overflow-y: auto;
+          height: auto;
+        }
+      }
     `}
   />
 );

@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "@emotion/styled";
-// import { gameRows, gameCols } from "./config";
 import Puzzle from "./components/Puzzle";
 import ShuffleButton from "./components/ShuffleButton";
 import PuzzleSizeControlls from "./components/PuzzleSizeControlls";
@@ -24,17 +23,25 @@ const BottomContainer = styled.div`
   align-items: center;
 `;
 
-function App() {
+const App: React.FC = () => {
   const [tiles, setTiles] = useState<number[]>([]);
   const [gameRows, setGameRows] = useState(3);
   const [gameCols, setGameCols] = useState(3);
-  const [ModalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [numberOfMoves, setNumberOfMoves] = useState(0);
 
+  const setup = useCallback(() => {
+    const totalTiles = gameRows * gameCols - 1;
+    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1);
+    initialTiles.push(0);
+    setTiles(initialTiles.sort(() => Math.random() - 0.5)); // blandar tilesen
+    setNumberOfMoves(0);
+  }, [gameRows, gameCols]);
+
   useEffect(() => {
     setup();
-  }, [gameRows, gameCols]);
+  }, [setup]);
 
   const handleShuffle = () => {
     setup();
@@ -45,22 +52,14 @@ function App() {
     setup();
   };
 
-  const setup = () => {
-    const totalTiles = gameRows * gameCols - 1;
-    const initialTiles = Array.from({ length: totalTiles }, (_, i) => i + 1);
-    initialTiles.push(0);
-    setTiles(initialTiles.sort(() => Math.random() - 0.5)); //blandar tilesen
-    setNumberOfMoves(0);
-  };
-
   const handleClick = (index: number) => {
     console.log("Clicked tile", index);
-    const blankIndex = tiles.indexOf(0); //hittar tom ruta
+    const blankIndex = tiles.indexOf(0); // hittar tom ruta
 
-    //hittar vart klickade rutan är
+    // hittar vart klickade rutan är
     const clickedRow = Math.floor(index / gameCols);
     const clickedColumn = index % gameCols;
-    //hittar vart den tomma rutan är
+    // hittar vart den tomma rutan är
     const blankRow = Math.floor(blankIndex / gameCols);
     const blankColumn = blankIndex % gameCols;
     console.log(clickedRow, clickedColumn, blankRow, blankColumn);
@@ -70,30 +69,24 @@ function App() {
     }
   };
 
-  const move = (Index: number, blankIndex: number) => {
+  const move = (index: number, blankIndex: number) => {
     const copyTilesArray = [...tiles];
-    let direction;
-    if (blankIndex < Index) {
-      direction = 1;
-    } else {
-      direction = -1;
-    }
+    const direction = blankIndex < index ? 1 : -1;
 
-    if (
-      Math.floor(Index / gameCols) === Math.floor(blankIndex / gameCols) //kollar om de är på samma col
-    ) {
-      for (let i = blankIndex; i !== Index; i += direction) {
+    if (Math.floor(index / gameCols) === Math.floor(blankIndex / gameCols)) {
+      for (let i = blankIndex; i !== index; i += direction) {
         copyTilesArray[i] = copyTilesArray[i + direction];
-      } //flyttar tilesen horisontellt
+      } // flyttar tilesen horisontellt
     } else {
-      for (let i = blankIndex; i !== Index; i += direction * gameCols) {
+      for (let i = blankIndex; i !== index; i += direction * gameCols) {
         copyTilesArray[i] = copyTilesArray[i + direction * gameCols];
-      } //flyttar tilesen vertikalt
+      } // flyttar tilesen vertikalt
     }
 
-    copyTilesArray[Index] = 0;
+    copyTilesArray[index] = 0;
     setTiles(copyTilesArray);
-    setNumberOfMoves(numberOfMoves + 1);
+    setNumberOfMoves((prev) => prev + 1);
+
     if (checkWin(copyTilesArray)) {
       setModalMessage("Congratulations! You solved the puzzle!");
       setModalVisible(true);
@@ -123,10 +116,11 @@ function App() {
       </BottomContainer>
       <MessageModal
         text={modalMessage}
-        isVisible={ModalVisible}
-        onClose={() => closeModal()}
+        isVisible={modalVisible}
+        onClose={closeModal}
       />
     </AppContainer>
   );
-}
+};
+
 export default App;
